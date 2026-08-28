@@ -1,0 +1,955 @@
+% !TEX program = pdflatex
+% vibe-summary.tex
+%
+% Self-contained English summary of the Master's thesis
+%   "MẶT BLW VÀ BÀI TOÁN BJ\"ORLING" (BLW surfaces and the Björling problem)
+%   Huỳnh Kỳ Anh, Master's thesis in Geometry and Topology,
+%   Hue University of Education, 2006.
+%   Advisor: Assoc. Prof. Đoàn Thế Hiếu; with the assistance of
+%   Prof. José A. Gálvez.
+%
+% This file is an independent, standard-LaTeX rendition (no dependency
+% on the thesis's custom `main.sty`/`ktv-maths` machinery) prepared so
+% that the mathematical content of the (Vietnamese) thesis can be read
+% and typeset in English. It is a SUMMARY, not a translation: proofs
+% are sketched, not reproduced in full detail; all definitions and
+% theorem statements are given precisely.
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% A handful of Vietnamese proper nouns in the front matter (the author's
+% and advisor's names, and the original Vietnamese subtitle) use
+% precomposed Unicode letters with stacked diacritics that inputenc's
+% default utf8 table does not know. Teach it about them explicitly,
+% using the LaTeX kernel's own accent commands (T1 fontenc, loaded
+% above, already has a native glyph for \DJ, so \DH{} is exact; the
+% double-accented letters are built by stacking two kernel accents,
+% which pdfTeX renders without needing any extra Vietnamese-specific
+% package such as vntex).
+\DeclareUnicodeCharacter{0110}{\DJ}       % Đ (D with stroke)
+\DeclareUnicodeCharacter{1EB6}{\d{\u A}}  % Ặ (A + breve + dot below)
+\DeclareUnicodeCharacter{1EB7}{\d{\u a}}  % ặ (a + breve + dot below)
+\DeclareUnicodeCharacter{1EBF}{\'{\^e}}   % ế (e + circumflex + acute)
+\DeclareUnicodeCharacter{1EF3}{\`y}       % ỳ (y + grave)
+
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{bm}
+
+\geometry{margin=1in}
+
+% =====================================================================
+% Notation macros (standard LaTeX, self-contained)
+% =====================================================================
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\Cbar}{\overline{\mathbb{C}}}           % Riemann sphere
+\newcommand{\Hyp}{\mathbb{H}^3}                      % hyperbolic 3-space
+\newcommand{\Lor}{\mathbb{L}^4}                      % Lorentz 4-space
+\newcommand{\deS}{\mathbb{S}^3_1}                    % de Sitter space
+\newcommand{\LCone}{\mathbb{N}^3_+}                  % future light cone
+\newcommand{\Herm}{\operatorname{Herm}(2)}
+\newcommand{\SLtwo}{\operatorname{SL}(2,\CC)}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}            % Lorentz inner product
+\newcommand{\cross}[2]{#1 \wedge #2}                 % Lorentz cross product
+\newcommand{\dz}{\partial_z}
+\newcommand{\dzb}{\partial_{\bar z}}
+\newcommand{\sgn}{\operatorname{sgn}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{problem}[theorem]{Problem}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\title{\textbf{BLW Surfaces and the Björling Problem}\\[2mm]
+\large English summary of the Master's thesis\\
+\textit{Mặt BLW và Bài toán Björling}}
+\author{Huỳnh Kỳ Anh\\[1mm]
+\small Master's Thesis in Geometry and Topology (code 60 46 10)\\
+\small Hue University of Education, 2006\\
+\small Advisor: Assoc.\ Prof.\ Đoàn Thế Hiếu\\
+\small with the assistance of Prof.\ José A.\ Gálvez\\[3mm]
+\small \emph{(Summary prepared in English from the original Vietnamese thesis)}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The classical \emph{Björling problem}, posed by E.\,G.\ Björling in 1844 and
+solved by H.\,A.\ Schwarz in 1890, asks for the minimal surface in $\RR^3$
+containing a prescribed analytic curve with a prescribed unit normal field
+along it. This thesis poses and solves the analogous problem for the class
+of \emph{BLW surfaces} (``Linear Weingarten surfaces of Bryant type'') in
+hyperbolic $3$-space $\Hyp$: surfaces whose mean curvature $H$ and (extrinsic)
+Gauss curvature $K_I$ satisfy the linear relation $2a(H-1)+bK_I=0$.
+This class contains the $\mathtt{CMC1}$ surfaces (constant mean curvature
+one) of Gálvez--Mira \cite{GMM1} ($b=0$) and the flat surfaces of
+Gálvez--Mira \cite{GMM5} ($a=0$) as special cases. The main results are:
+(1) a full existence-and-uniqueness theorem for the Björling problem for BLW
+surfaces, together with an explicit closed-form representation of the
+solution (a ``Björling representation'' that does not go through the
+conformal/harmonic representation of \cite{GMM2}); and (2) a theorem
+determining exactly when the hyperbolic Gauss map of a BLW surface is
+meromorphic versus anti-meromorphic, generalizing R.\ Bryant's classical
+fact that the hyperbolic Gauss map of a regular surface in $\Hyp$ is
+meromorphic iff the surface has $H\equiv 1$ (i.e., is $\mathtt{CMC1}$).
+\end{abstract}
+
+\tableofcontents
+
+% =====================================================================
+\section{Introduction}
+% =====================================================================
+
+The \emph{classical Björling problem} was introduced by E.\,G.\ Björling in
+1844 and solved by H.\,A.\ Schwarz in 1890: given an analytic curve
+$\beta\subset\RR^3$ with an analytic unit tangent, find the minimal surface
+containing $\beta$ as a geodesic. A key structural consequence of the
+existence-and-uniqueness of the solution is that a minimal surface $\Sigma$
+is symmetric with respect to any plane orthogonal to $\Sigma$.
+
+A natural generalization is: given a class $\mathfrak B$ of surfaces
+(e.g.\ $\mathtt{CMC1}$, $\mathtt{ELW}$, $\mathtt{flat}$, \dots), a curve
+$\beta$, and a unit normal field $V$ along $\beta$, find a surface
+$\Sigma\in\mathfrak B$ containing $\beta$ with prescribed unit normal $V$
+along it. Appendix~A of the thesis lists the Björling-type problems that
+had been solved before this work; in every known case the solution is
+unique and yields a symmetry principle for the surface class in question.
+Solving the Björling problem for a class also produces many explicit
+examples and has led to classification results — e.g.\ the classification
+of $\mathtt{CMC1}$ surfaces of cylindrical topology \cite{GMM1}, and of
+flat fronts with embedded isolated singularities \cite{GMM5}.
+
+\medskip
+Building on the solutions for $\mathtt{CMC1}$ surfaces \cite{GMM1} and
+regular flat surfaces \cite{GMM5}, this thesis poses and solves the
+Björling problem for \textbf{BLW surfaces}: surfaces $\psi:S\to\Hyp$ whose
+mean curvature $H$ and Gauss curvature $K_I=K-1$ (here $K$ is the
+Gauss--Kronecker/extrinsic curvature) satisfy
+\begin{equation}\label{eq:BLW}
+  2a(H-1)+bK_I = 0 ,
+\end{equation}
+for real constants $a,b$ with $a+b\neq0$. The technique follows
+\cite{GMM1}: to build the solution one needs a fact about the
+meromorphicity of the hyperbolic Gauss map, originally due to
+R.\ Bryant \cite{BRYANT}. This fact is partially generalized in
+Theorem~\ref{thm:G} below, which is the key ingredient for solving the
+Björling problem for BLW surfaces. (Open questions about further
+generalizing Bryant's theorem are discussed in
+Section~\ref{sec:conclusion}, Problem~\ref{open:G}.)
+
+\subsection*{Outline}
+Section~\ref{sec:prelim} collects the background material: the model of
+hyperbolic space, the local theory of surfaces in $\Hyp$, Riemann
+surfaces and (anti-)meromorphic maps, conformality, basic lemmas on BLW
+surfaces, and the Cauchy problem for the Liouville equation.
+Section~\ref{sec:BJ} states the Björling problem for BLW surfaces and the
+two main theorems (Theorem~\ref{thm:BJ}, the existence-and-uniqueness
+theorem, and Theorem~\ref{thm:G}, on meromorphicity of the hyperbolic
+Gauss map), and sketches their proofs.
+Section~\ref{sec:conclusion} summarizes the contributions and lists
+several open problems suggested by the work.
+Appendix~\ref{app:list} reproduces the thesis's table of previously solved
+Björling-type problems.
+
+% =====================================================================
+\section{Preliminaries}\label{sec:prelim}
+% =====================================================================
+
+\subsection{The hyperbolic space $\Hyp$}\label{ssec:H3}
+
+\emph{Lorentz $4$-space} $\Lor$ is $\RR^4$ equipped with the Lorentzian
+pseudo-metric
+\begin{equation}
+  \ip{\cdot}{\cdot} = -dx_0^2+dx_1^2+dx_2^2+dx_3^2 .
+\end{equation}
+Two distinguished subsets are the \emph{de Sitter $3$-space}
+$\deS=\{x\in\Lor : \ip xx=1\}$ and the \emph{future light cone}
+$\LCone=\{x\in\Lor : \ip xx=0,\ x_0>0\}$. The set
+\[
+  \Hyp = \{x\in\Lor : \ip xx=-1,\ x_0>0\}
+\]
+is the \emph{Minkowski model of (3-dimensional) hyperbolic space}; its
+tangent space at $p$ is $T_p\Hyp=\{x\in\Lor:\ip xp=0\}$.
+
+Identifying $(x_0,x_1,x_2,x_3)\in\Lor$ with the Hermitian $2\times2$ matrix
+$\begin{psmallmatrix}x_0+x_3 & x_1+ix_2\\ x_1-ix_2 & x_0-x_3\end{psmallmatrix}$
+realizes $\Lor$ as $\Herm$, the space of Hermitian $2\times2$ matrices,
+with $\ip mm=-\det(m)$; thus $\Hyp=\{m\in\Herm:\det m=1\}$. This
+matrix model is used throughout the construction of solutions.
+
+For $p,u,v\in\Lor$ the \emph{Lorentzian cross product} (``triple wedge
+product'') is
+\begin{equation}
+  p\wedge u\wedge v = -\det\begin{pmatrix} -i&j&k&l\\ p_0&p_1&p_2&p_3\\
+  u_0&u_1&u_2&u_3\\ v_0&v_1&v_2&v_3\end{pmatrix},
+\end{equation}
+$(i,j,k,l)$ the standard basis, characterized by
+$\ip{p\wedge u\wedge v}{w}=\det(p,u,v,w)$ for all $w$. Three identities
+proved directly from the determinant (identities \eqref{eq:wpbase}--\eqref{eq:wpb}
+below; these are singled out by the author as small original computations
+used repeatedly in the proofs) are, for $\ip uv=0$, $w=p\wedge u\wedge v$, $\alpha=\ip uu$,
+$\beta=\ip vv$:
+\begin{gather}
+  \ip ww = -\alpha\beta\ip pp + \alpha\ip pv^2+\beta\ip pu^2, \label{eq:wpbase}\\
+  \ip{u\wedge v}{u\wedge v} = \ip uu\ip vv - \ip uv^2
+    \qquad (u,v,w\in T_p\Hyp), \label{eq:wpa}\\
+  w\wedge(u\wedge v) = u\ip wv - v\ip wu \qquad (u,v,w\in T_p\Hyp). \label{eq:wpb}
+\end{gather}
+The Lorentz metric restricted to each $T_p\Hyp$ is positive definite, so
+$\Hyp$ is Riemannian; by do Carmo \cite{CARMO} it is simply connected,
+complete, of constant sectional curvature $-1$. Note also: if
+$(\beta,v)\in\Hyp\times\deS$ with $\ip\beta v=0$, then $n=\beta+v\in\LCone$
+and $n_0+n_3\ge0$.
+
+\subsection{Local theory of surfaces in $\Hyp$}\label{ssec:local}
+
+Let $S$ be a connected, oriented $2$-manifold (a \emph{surface}) and
+$\psi:S\to\Hyp$. A point $z_0$ is \emph{regular} if $\mathrm{rank}(d\psi)_{z_0}=2$;
+in a conformal parameter $z=s+it$ this is $\{\psi_s\wedge\psi_t\}_{z_0}\ne0$.
+The \emph{unit normal field} $\eta:S\to\deS$ satisfies $\ip\psi\eta=0$,
+$\ip{d\psi}\eta=0$, and (matching the orientation) at regular points
+\begin{equation}
+  \eta = \frac{\psi_s\wedge\psi_t}{\sqrt{\ip{\psi_s\wedge\psi_t}{\psi_s\wedge\psi_t}}}.
+\end{equation}
+At regular points there is an expansion
+\begin{equation}\label{eq:eta-expansion}
+  \eta_z = -\Delta\,\psi_z+\Upsilon\,\psi_{\bar z}, \qquad
+  \eta_{\bar z} = \bar\Upsilon\,\psi_z-\Delta\,\psi_{\bar z},
+\end{equation}
+with $\Delta$ real-valued and $\Upsilon$ complex-valued; the mean
+curvature and Gauss--Kronecker curvature are $H=\Delta$ and
+$K=H^2-|\Upsilon|^2$. Both are invariant under orientation-preserving
+reparametrization.
+
+The \emph{hyperbolic Gauss map} of $\psi$ is $G=[\psi+\eta]:S\to\Cbar$,
+\begin{equation}\label{eq:Gdef}
+  G = [\psi+\eta] = \frac{N_1-iN_2}{N_0+N_3}, \qquad N=\psi+\eta,
+\end{equation}
+i.e.\ the south-pole stereographic projection of the ideal boundary
+$\partial^2_\infty\Hyp\cong\Cbar$ onto the extended complex plane through the
+center of $\partial^2_\infty\Hyp$ (with $G=\infty$ when $N_0+N_3=0$). See
+Bryant \cite{BRYANT} and Gálvez--Mira \cite{GMM2,GMM1} for details.
+
+\subsection{Riemann surfaces; meromorphic and anti-meromorphic maps}
+
+A \emph{Riemann surface} is a $2$-manifold with an atlas of holomorphically
+compatible charts. Every oriented Riemannian $2$-manifold $(X,\sigma)$
+admits such an atlas in which $\sigma$ is conformal (isothermal
+coordinates), so every oriented Riemannian surface may be regarded as a
+Riemann surface. The Riemann sphere $\partial^2_\infty\Hyp\cong\Cbar$ is
+an example.
+
+A \emph{meromorphic} function $f:S\to\Cbar$ is a holomorphic map in the
+manifold sense; equivalently, in an orientation-preserving conformal
+parameter $z$,
+\begin{equation}\label{eq:meromorphic}
+  f_{\bar z} = 0.
+\end{equation}
+Analogously $f$ is \emph{anti-meromorphic} if $f_z=0$ in such parameters.
+Reversing the orientation of $\Cbar$ interchanges meromorphic and
+anti-meromorphic maps, so the two classes share properties such as
+uniqueness theorems and the identity theorem.
+
+\subsection{Conformality}
+
+A regular map $f:(M,\sigma_1)\to(N,\ip\cdot\cdot)$ between Riemannian
+manifolds is \emph{conformal} if $\sigma_1$ is a positive multiple of the
+pulled-back metric $\sigma_2(u,v):=\ip{df(u)}{df(v)}$. When $\dim M=2$
+and $z=s+it$ is $\sigma_1$-conformal, this is equivalent to
+\begin{equation}\label{eq:fzfz}
+  4\ip{f_z}{f_z} = \ip{f_s}{f_s}-\ip{f_t}{f_t}-2i\ip{f_s}{f_t}=0 .
+\end{equation}
+The notion extends to maps that are not everywhere regular and to targets
+with only a pseudo-metric, by requiring \eqref{eq:fzfz} in every conformal
+chart of $M$. A holomorphic map $f:D\subset\CC\to\CC$ is conformal at its
+regular points (angle- and orientation-preserving); conversely a conformal
+map $f:S\to\Cbar$ is holomorphic or anti-holomorphic, and vice versa.
+
+\subsection{Basic lemmas on BLW surfaces}\label{ssec:BLWbasic}
+
+\begin{definition}[BLW surface]\label{def:BLW}
+A regular map $\psi:S\to\Hyp$ is a \textbf{BLW surface} (Linear Weingarten
+surface of Bryant type) if there are real constants $a,b$ such that
+\begin{equation}\label{eq:BLWdef}
+  2a(H-1)+bK_I = 2a(H-1)+b(K-1) = 0,
+\end{equation}
+where $H$ is the mean curvature, $K$ the Gauss--Kronecker curvature, and
+$K_I=K-1$ the (intrinsic) Gauss curvature of $\psi$.
+\end{definition}
+
+The degenerate case $a+b=0$ is treated in \cite{MAGIC} and is excluded
+throughout ($a+b\neq0$ is assumed from here on). If $b=0$ then $a=\pm1$
+and \eqref{eq:BLWdef} says $H\equiv1$: these are the $\mathtt{CMC1}$
+surfaces, for which the Björling problem was solved in \cite{GMM1}. If
+$a=0$, \eqref{eq:BLWdef} says $K\equiv1$, i.e.\ the surface is
+\emph{flat}, as studied in \cite{GMM5}.
+
+\begin{lemma}[{\cite[Lemma 1]{GMM2}}]\label{lem:sigma}
+Let $\psi$ be a BLW surface satisfying \eqref{eq:BLWdef}. One may
+normalize $|a+b|=1$, choosing the signs of $a,b$ so that
+\begin{equation}
+  \sigma = aI+bI\!I
+\end{equation}
+is a positive-definite metric on $S$, where $I=\ip{d\psi}{d\psi}$ and
+$I\!I=\ip{d\psi}{-d\eta}$ are the first and second fundamental forms.
+\end{lemma}
+Throughout, $S$ is regarded as a Riemann surface for the conformal
+structure induced by $\sigma$, and it is always assumed $|a+b|=1$ with
+signs chosen as in Lemma~\ref{lem:sigma}.
+
+\begin{remark}[assembled from {\cite[Thm.\,1, its proof, and Remark 3]{GMM2}}]\label{rmk:psipluseta}
+Let $\psi:S\to\Hyp$ be BLW as in \eqref{eq:BLWdef}, $\eta$ its unit normal,
+$z$ a $\sigma$-conformal parameter, and $2\chi$ the conformal factor of
+$\sigma=2\chi|dz|^2$. Then:
+\begin{enumerate}[label=(\arabic*)]
+\item $\psi+\eta$ is conformal for $\sigma$, and either $\psi(S)$ is
+  part of a \emph{horosphere}, or $\ip{d(\psi+\eta)}{d(\psi+\eta)}$ is a
+  pseudo-metric of constant curvature $c=\tfrac a{a+b}$; in particular the
+  hyperbolic Gauss map $G=[\psi+\eta]$ is conformal;
+\item $z_0\in S$ is a singular point of $\psi+\eta$ iff $H(z_0)=K(z_0)=1$;
+  hence every such singular point is an \emph{umbilic} point of $\psi$;
+\item the Hopf differential $Q_I=\ip{\psi_z}{\psi_z}\,dz^2$ is holomorphic,
+  so a BLW surface is either totally umbilic or has isolated umbilic
+  points;
+\item at regular points of $\psi+\eta$,
+  \begin{equation}
+    \psi = \frac{2a+b}{2(a+b)}(\psi+\eta)
+      + \frac{a+b}{\chi(2H-K-1)}(\psi+\eta)_{z\bar z};
+  \end{equation}
+  if in addition $b\neq0$,
+  \begin{equation}\label{eq:2H-K-1}
+    \frac{2H-K-1}{a+b}
+      = \frac1\chi\ip{(\psi+\eta)_z}{(\psi+\eta)_{\bar z}},
+  \end{equation}
+  and, with $\phi$ the conformal factor of $\ip{d(\psi+\eta)}{d(\psi+\eta)}$,
+  \begin{equation}\label{eq:psi-recovered}
+    \psi = \frac{2a+b}{2(a+b)}(\psi+\eta) + \frac2\phi(\psi+\eta)_{z\bar z}.
+  \end{equation}
+\end{enumerate}
+\end{remark}
+By \cite{GMM1}, formula \eqref{eq:psi-recovered} — the key device for
+\emph{recovering} $\psi$ from $\psi+\eta$ — remains valid even when $b=0$.
+
+\subsection{The Liouville equation}\label{ssec:Liouville}
+
+For a planar domain $U\subset\CC$ and real constant $c$, the
+\emph{Liouville equation} is
+\begin{equation}\label{eq:Ldef}
+  (\log\phi)_{z\bar z} = -\frac c2\phi.
+\end{equation}
+If $ds^2=\phi|dz|^2$ is a Riemannian metric on $U$, then $\phi$ solves
+\eqref{eq:Ldef} iff $ds^2$ has constant curvature $c$. This link between
+surface theory and \eqref{eq:Ldef} is what drives the whole construction:
+solving the Björling problem for BLW surfaces reduces to solving a Cauchy
+problem for \eqref{eq:Ldef} (with $c=a/(a+b)$, the curvature of
+$\ip{d(\psi+\eta)}{\cdot}$ from Remark~\ref{rmk:psipluseta}). This
+contrasts with the classical minimal-surface Björling problem in $\RR^3$,
+which reduces merely to integrating functions with no real periods; here
+one must solve a genuine PDE.
+
+The relevant Cauchy problem is
+\begin{equation}\label{eq:Lcauchy}
+  \begin{cases}
+    (\log\phi)_{z\bar z} = -\dfrac c2\phi,\\[1mm]
+    \phi(s,0)=a(s), \qquad \phi_z(s,0)=b(s),
+  \end{cases}
+\end{equation}
+with $a(s)$ real-analytic and non-negative and $b(s)$ complex-analytic
+with $2\Re\{b(s)\}=a'(s)$. Write $\{f,z\}=\big(f''/f'\big)'-\tfrac12\big(f''/f'\big)^2$
+for the Schwarzian derivative.
+
+\begin{theorem}[{\cite[Thm.\,1]{GMM1}}, case $c\neq0$]\label{thm:GMM1-1}
+Let $c\neq0$ and let $T(s):I\to\CC$ solve $\{T,s\}=\Upsilon(s)$, where
+\[
+  2\Upsilon(s)=2\Big(\frac{b(s)}{a(s)}\Big)'-\Big(\frac{b(s)}{a(s)}\Big)^2+c\,a(s).
+\]
+Set
+\[
+  \overline R(s)=\frac1c\,
+    \frac{T''(s)-\{b(s)/a(s)\}\,T'(s)}
+         {2T'(s)^2-T(s)T''(s)+\{b(s)/a(s)\}\,T(s)T'(s)}.
+\]
+Let $T(z)$, $R(z)$ be the meromorphic extensions of $T(s)$, $\overline R(s)$
+on an open $D\subset\CC$ containing $I$. Then
+\[
+  \phi(s,t) = \frac{4\,T_z\,\overline R_{\bar z}}{(1+cT\overline R)^2}
+\]
+is the unique solution of \eqref{eq:Lcauchy}.
+\end{theorem}
+
+For the degenerate case $c=0$ the Cauchy data is instead
+$\phi(s,0)=a(s)$, $\phi_t(s,0)=d(s)$ (real-analytic $a>0$, $d$):
+
+\begin{theorem}[{\cite[Thm.\,6]{GMM1}}, case $c=0$]\label{thm:GMM1-6}
+Fix $s_0\in I$, put $\theta(s)=-\tfrac12\int_{s_0}^s d(r)/a(r)\,dr$, and
+let $\sqrt a(z)$, $\theta(z)$ be the holomorphic extensions of
+$\sqrt{a(s)}$, $\theta(s)$. Then $\phi(s,t)=|f(z)|^2$, $z=s+it$, with
+\[
+  f(z)=\sqrt a(z)\,e^{i\theta(z)}.
+\]
+\end{theorem}
+
+There is also a purely \emph{geometric} construction of the solution to
+the real form of \eqref{eq:Lcauchy},
+\begin{equation}\label{eq:Lcauchyreal}
+  \Delta(\ln\phi)=-2c\phi, \qquad \phi(s,0)=a(s),\ \phi_t(s,0)=d(s).
+\end{equation}
+Let $\mathfrak Q(c)$ be the constant-curvature-$c$ Riemann surface
+$\mathfrak Q(0)=\RR^2$, $\mathfrak Q(c)=\mathbb S^2(c)$ ($c>0$) or
+$\mathbb H^2(c)$ ($c<0$), and $\pi(x_0,x_1,x_2)=\tfrac{x_1+ix_2}{1-cx_0}$
+its stereographic projection to $\Cbar$.
+
+\begin{theorem}[{\cite[Thm.\,3]{GMM1}}]\label{thm:GMM1-3}
+The unique solution of \eqref{eq:Lcauchyreal} is
+\[
+  \phi(s,t)=\frac{4|g'(z)|^2}{(1+c|g(z)|^2)^2}, \qquad z=s+it,
+\]
+where $g(z)$ is the meromorphic extension of $g(s)=\pi(\alpha(s))$, and
+$\alpha(s)$ is the unique arclength-parametrized curve in $\mathfrak Q(c)$
+with geodesic curvature $\kappa(s)=-d(s)/(2a(s)^{3/2})$ and speed function
+$u(s)=\int^s\sqrt{a}(r)\,dr$.
+\end{theorem}
+
+Finally, the \emph{modified Liouville equation} used directly in the
+Björling construction is
+\begin{equation}\label{eq:Lmod}
+  4(\ln\rho)_{z\bar z} = -c\,\rho^2\,|f(z)|^2 ,
+\end{equation}
+$f$ meromorphic: $\rho$ solves \eqref{eq:Lmod} iff $\phi=\rho^2|f|^2$
+solves \eqref{eq:Ldef}. For its Cauchy problem
+$\rho(s,0)=v(s)$, $\rho_z(s,0)=w(s)$ ($f$ with no real pole):
+
+\begin{corollary}\label{cor:Lmod}
+The solution of the Cauchy problem for \eqref{eq:Lmod} is
+$\rho=\sqrt\phi/|f|$, with $\phi$ the solution of \eqref{eq:Lcauchy}
+(via Theorem~\ref{thm:GMM1-1} or \ref{thm:GMM1-6}) with
+\[
+  a(s)=v(s)^2|f(s)|^2, \qquad
+  b(s)=2v(s)w(s)|f(s)|^2+v(s)^2 f'(s)\overline{f(s)} .
+\]
+\end{corollary}
+
+% =====================================================================
+\section{The Björling problem for BLW surfaces}\label{sec:BJ}
+% =====================================================================
+
+\begin{definition}\label{def:analyticcurve}
+A curve $\beta:I\to S$ on a Riemann surface $S$ is \emph{analytic at
+$s_0\in I$} if, in a conformal chart $(U,z)$ around $\beta(s_0)$, the
+curve $z\circ\beta$ is real-analytic at $s_0$; $\beta$ is \emph{analytic}
+if this holds at every $s\in I$. Regularity of $\beta$ is defined
+analogously.
+\end{definition}
+
+\subsection{Statement of the problem}\label{ssec:statement}
+
+\begin{problem}[Björling problem for BLW surfaces]\label{prob:BJ}
+Let $a,b\in\RR$ with $|a+b|=1$, let $\beta:I\to\Hyp$ be a regular
+analytic curve and $V:I\to\deS$ an analytic vector field along $\beta$
+such that, for all $s\in I$,
+\begin{align}
+  &\ip{\beta(s)}{V(s)} = \ip{\beta'(s)}{V(s)} = 0, \label{eq:cond1}\\
+  &\ip{\beta'(s)}{a\beta'(s)-bV'(s)} > 0. \label{eq:cond2}
+\end{align}
+Find a BLW surface $\psi:S\to\Hyp$ satisfying \eqref{eq:BLWdef} such that
+there is a regular analytic curve $\Gamma\subset S$ with $\psi(\Gamma)=\beta$
+and with unit normal field of $\psi$ along $\beta$ equal to $V$. Such a
+$\psi$ is a \emph{solution of the Björling problem} with \emph{initial
+data} $(\beta,V)$.
+\end{problem}
+
+Condition \eqref{eq:cond2} is exactly the requirement that the induced
+conformal factor $\chi$ of $\sigma=aI+bI\!I$ be positive along $\beta$
+(see \eqref{eq:sigma-along-beta} below), i.e.\ that $\sigma$ have a chance
+of being positive-definite near $\beta$.
+
+\subsection{Main theorem}
+
+\begin{theorem}[Existence and uniqueness]\label{thm:BJ}
+Let $(\beta,V)$ be initial data as in Problem~\ref{prob:BJ}. Suppose
+$v=\beta+V$ satisfies $v_0(s)+v_3(s)\neq0$ for all $s\in I$, and that the
+map
+\begin{equation}\label{eq:Gextra}
+  G = \frac{v_1-iv_2}{v_0+v_3} : I\to\CC
+\end{equation}
+has nowhere-vanishing derivative on $I$. Then the Björling problem with
+initial data $(\beta,V)$ has a \emph{unique} solution $\psi:D\subset\CC\to
+\Hyp$, constructed near $\beta$ as follows.
+\begin{description}
+\item[Case $a+b=1$.] Let $\beta(z)$, $V(z)$ be the holomorphic
+  extensions of $\beta(s)$, $V(s)$; set $v(z)=\beta(z)+V(z)$ and
+  \begin{equation}\label{eq:Gz}
+    G(z) = \frac{v_1(z)-iv_2(z)}{v_0(z)+v_3(z)}.
+  \end{equation}
+  Let $\rho:D\to\CC\setminus\{0\}$ solve the Cauchy problem
+  \begin{equation}\label{eq:Lmodcompleted}
+    \begin{cases}
+      4(\log\rho)_{z\bar z} = -\dfrac{a}{a+b}\,\rho^2|G_z|^2,\\[1mm]
+      \rho(s,0) = v_0(s)+v_3(s),\\[1mm]
+      \rho_z(s,0) = \dfrac12\Big\{v_0'+v_3'
+        + i\big[(V\wedge v')_0+(V\wedge v')_3\big]\Big\};
+    \end{cases}
+  \end{equation}
+  then $\psi = F\Omega F^* : D\to\Hyp$, where
+  \begin{equation}\label{eq:FOmega}
+    F=\begin{pmatrix}1&0\\ G&1\end{pmatrix}, \qquad
+    \Omega = \begin{pmatrix}
+      \dfrac{2a+b}{2(a+b)}\rho + \dfrac{2\rho_{z\bar z}}{\rho^2|G_z|^2}
+        & \dfrac{2\rho_z}{\rho^2 G_z}\\[3mm]
+      \dfrac{2\rho_{\bar z}}{\rho^2\overline{G_z}} & \dfrac2\rho
+    \end{pmatrix}.
+  \end{equation}
+\item[Case $a+b=-1$.] Let $\beta(z)$, $V(z)$ be the \emph{anti}-holomorphic
+  extensions of $\beta(s)$, $V(s)$; set $v(z)=\beta(z)+V(z)$ and $G(z)$ as
+  in \eqref{eq:Gz}. Let $\rho:D\to\CC\setminus\{0\}$ solve
+  \begin{equation}\label{eq:Lmodcompleted2}
+    \begin{cases}
+      4(\log\rho)_{z\bar z} = -\dfrac a{a+b}\,\rho^2|\overline{G_z}|^2,\\[1mm]
+      \rho(s,0) = v_0(s)+v_3(s),\\[1mm]
+      \rho_z(s,0) = \dfrac12\Big\{v_0'+v_3'
+        - i\big[(V\wedge v')_0+(V\wedge v')_3\big]\Big\};
+    \end{cases}
+  \end{equation}
+  then $\psi=F\Omega F^*:D\to\Hyp$ with $F$ as before and
+  \begin{equation}\label{eq:FOmega2}
+    \Omega = \begin{pmatrix}
+      \dfrac{2a+b}{2(a+b)}\rho + \dfrac{2\rho_{z\bar z}}{\rho^2|\overline{G_z}|^2}
+        & \dfrac{2\rho_{\bar z}}{\rho^2 G_{\bar z}}\\[3mm]
+      \dfrac{2\rho_z}{\rho^2\overline{G_z}} & \dfrac2\rho
+    \end{pmatrix}.
+  \end{equation}
+\end{description}
+In either case, $G$ is the hyperbolic Gauss map of $\psi$, and $\rho$ is
+constructed via Section~\ref{ssec:Liouville}.
+\end{theorem}
+
+Two remarks on the hypotheses (elaborated in Section~\ref{ssec:remarks}):
+the non-vanishing of $v_0+v_3$ can be removed (composing $G$ with a
+Möbius transformation), while the non-vanishing of $G'$ genuinely limits
+singularities and cannot be dropped for free (Section~\ref{sec:conclusion},
+Problems~\ref{open:G.equiv.0}, \ref{open:singularity.1}).
+
+The theorem \emph{contains} the Björling theorems for $\mathtt{CMC1}$
+surfaces \cite{GMM1} ($b=0$) and regular flat surfaces \cite{GMM5}
+($a=0$) as special cases, and gives a \emph{Björling representation} of
+BLW surfaces that bypasses the conformal representation of \cite{GMM2}.
+
+\subsection{Meromorphicity of the hyperbolic Gauss map}
+
+By Bryant \cite{BRYANT}, the hyperbolic Gauss map of a regular surface
+$\psi:S\to\Hyp$ is meromorphic if and only if $\psi$ is $\mathtt{CMC1}$.
+The following theorem partially generalizes this fact and is the key
+technical tool used to justify meromorphic vs.\ anti-meromorphic
+extension of $G$ in the two cases of Theorem~\ref{thm:BJ}.
+
+\begin{theorem}\label{thm:G}
+Let $\psi:S\to\Hyp$ be a BLW surface satisfying \eqref{eq:BLWdef}, with
+$\psi(S)$ not (part of) a horosphere. Then the hyperbolic Gauss map $G$
+of $\psi$ is meromorphic if $a+b>0$, and anti-meromorphic if $a+b<0$.
+\end{theorem}
+
+For $\mathtt{CMC1}$ surfaces $a+b=a=\pm1$: Bryant's theorem is the special
+case $a=1$ (meromorphic); the sign convention in the BLW normalization
+absorbs the case $a=-1$ as the anti-meromorphic statement, consistent
+with the classical result up to orientation.
+
+\subsection{Sketch of proof}\label{ssec:proofsketch}
+
+The proof of Theorem~\ref{thm:BJ} is organized into a uniqueness part
+(Section~\ref{ssec:uniq}) and an existence part
+(Section~\ref{ssec:exist}) for the case $a+b=1$; the case $a+b=-1$
+(Section~\ref{ssec:case-1}) is handled by an entirely analogous argument.
+Section~\ref{ssec:remarks} proves Theorem~\ref{thm:G} and discusses the
+hypotheses on the initial data.
+
+\subsubsection{Uniqueness ($a+b=1$)}\label{ssec:uniq}
+
+Suppose $\psi:S\to\Hyp$ solves Problem~\ref{prob:BJ}. Equip $S$ with the
+Riemann surface structure induced by $\sigma=aI+bI\!I$ (Lemma~\ref{lem:sigma}).
+The strategy is to show that $\psi$ is \emph{locally determined} by the
+initial data $(\beta,V)$ via an explicit formula, and then invoke analytic
+continuation to get global uniqueness.
+
+\emph{Parametrization.} Choose a conformal chart $(U,z)$ meeting $\Gamma$
+in a segment $J'$; write $\gamma=z\circ\Gamma$. Since $\gamma$ is analytic
+and regular at a fixed $s_0\in J'$, the inverse function theorem gives a
+biholomorphism $\gamma:D\to B$ onto a neighborhood in $z(U)$, and the
+surface is represented locally as $\psi(w)=\chi(\gamma(w))$ with
+$\psi(s,0)=\beta(s)$, $\eta(s,0)=V(s)$ on $J=(s_0-\delta,s_0+\delta)$.
+
+\emph{Reduction to the modified Liouville equation.} Writing
+$v=\beta+V:I\to\LCone$, the hyperbolic Gauss map restricted to $\beta$ is
+$G(s)=(v_1-iv_2)/(v_0+v_3)$; since $G$ is meromorphic (justified in
+Section~\ref{ssec:remarks}) it extends uniquely to $G(z)$ on $D$. Writing
+\begin{equation}\label{eq:psipluseta-rep}
+  \psi+\eta = \rho\begin{pmatrix}1&\overline G\\ G&G\overline G\end{pmatrix},
+  \qquad \rho=N_0+N_3,\ N=\psi+\eta,
+\end{equation}
+the fact that $\tau=\ip{d(\psi+\eta)}{d(\psi+\eta)}$ has constant
+curvature $c=a/(a+b)$ (Remark~\ref{rmk:psipluseta}) together with
+\eqref{eq:psipluseta-rep} gives $\ip{(\psi+\eta)_z}{(\psi+\eta)_{\bar z}}
+=\tfrac12\rho^2|G_z|^2$, so the conformal factor $\phi=\rho^2|G_z|^2$ of
+$\tau$ satisfies the Liouville equation \eqref{eq:Ldef}; since $G_z$ is
+meromorphic, $\rho$ itself satisfies the \emph{modified} Liouville
+equation \eqref{eq:Lmod} with $c=a/(a+b)$.
+
+\emph{Initial conditions.} Directly, $\rho(s,0)=v_0(s)+v_3(s)$. To find
+$\rho_z(s,0)$, expand $\eta_z,\eta_{\bar z}$ via \eqref{eq:eta-expansion}
+to get $(\psi+\eta)_z\wedge(\psi+\eta)_{\bar z}=-(2H-K-1)\psi_z\wedge\psi_{\bar z}$,
+and combine with \eqref{eq:2H-K-1} (valid, by Bryant/\cite{GMM1}, even when
+$b=0$) to get $\sgn(2H-K-1)=\sgn(a+b)$ at regular points, hence
+\[
+  (\psi+\eta)_t = -\sgn(a+b)\,\eta\wedge(\psi+\eta)_s.
+\]
+This yields $(\psi+\eta)_z(s,0)=\tfrac12\{v'+i\sgn(a+b)\,V\wedge v'\}$, i.e.
+\begin{equation}\label{eq:rhoz-init}
+  \rho_z(s,0) = \frac12\Big\{v_0'+v_3'
+    + i\sgn(a+b)\big[(V\wedge v')_0+(V\wedge v')_3\big]\Big\},
+\end{equation}
+which together with the previous two facts is exactly the Cauchy problem
+\eqref{eq:Lmodcompleted} (for $a+b=1$; sign flips to
+\eqref{eq:Lmodcompleted2} when $a+b=-1$). Thus $\rho$ is uniquely
+determined by $(\beta,V)$.
+
+\emph{Recovering $\psi$.} With $F=\begin{psmallmatrix}1&0\\G&1\end{psmallmatrix}$
+one has $\psi+\eta=F\begin{psmallmatrix}\rho&0\\0&0\end{psmallmatrix}F^*$,
+and differentiating using $F_z=F\begin{psmallmatrix}0&0\\G_z&0\end{psmallmatrix}$
+gives explicit expressions for $(\psi+\eta)_{\bar z}$ and
+$(\psi+\eta)_{z\bar z}$ in terms of $F$ and $\rho$. Substituting into the
+recovery formula \eqref{eq:psi-recovered} from Remark~\ref{rmk:psipluseta}
+gives, at regular points of $\psi+\eta$,
+\[
+  \psi = F\Omega F^*
+\]
+with $\Omega$ exactly \eqref{eq:FOmega}, and $\det\Omega=1$ because $\rho$
+solves \eqref{eq:Lmodcompleted}. This is the desired closed form,
+completing the uniqueness argument (via analytic continuation of BLW
+surfaces).
+
+\subsubsection{Existence ($a+b=1$)}\label{ssec:exist}
+
+Given data $(\beta,V)$ satisfying the hypotheses of Theorem~\ref{thm:BJ}
+with $a+b=1$: define $G(s)$ by \eqref{eq:Gextra}, extend it meromorphically
+to $G(z)$ by \eqref{eq:Gz} on a domain $D$
+containing $I$, and let $\rho$ solve \eqref{eq:Lmodcompleted}. On
+$U=D\setminus P$ (removing the closed set $P$ of zeros of $\rho$ and
+zeros/poles of $G_z$ — a set that does not meet $I$), define
+$\psi=F\Omega F^*$ and $N=F\begin{psmallmatrix}\rho&0\\0&0\end{psmallmatrix}F^*$
+with $F,\Omega$ as in \eqref{eq:FOmega}. The proof that $\psi$ is a
+solution proceeds in five steps.
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{$\sigma=aI+bI\!I$ is positive-definite.} Writing
+  $\Omega=\begin{psmallmatrix}A&B\\ \overline B&C\end{psmallmatrix}$ and
+  $U:=AG_z+\overline B_z=\tfrac{b}{2(a+b)}\rho G_z$ (using
+  \eqref{eq:Lmodcompleted}), direct computation with
+  $F_z=F\begin{psmallmatrix}0&0\\G_z&0\end{psmallmatrix}$ shows the
+  $dz^2$- and $d\bar z^2$-coefficients of $\sigma$ vanish and the
+  remaining ($|dz|^2$) coefficient is
+  \begin{equation}\label{eq:sigma-expanded}
+    2\chi = (a+b)\big\{|B_z|^2-|U|^2\big\}.
+  \end{equation}
+  Along $\beta$ this equals
+  \begin{equation}\label{eq:sigma-along-beta}
+    2\chi(s,0) = 2\ip{\beta'(s)}{a\beta'(s)-bV'(s)} > 0
+  \end{equation}
+  by hypothesis \eqref{eq:cond2}, so $\sigma$ is positive-definite (hence
+  a genuine conformal metric) near $\beta$.
+\item \textbf{$\psi$ is regular.} From
+  $\psi_z=F\begin{psmallmatrix}*&B_z\\U&0\end{psmallmatrix}F^*$ one
+  computes $\ip{\psi_s\wedge\psi_t}{\psi_s\wedge\psi_t}=|B_z|^2-|U|^2$,
+  which is exactly the (positive, by step (i)) coefficient of $\sigma$;
+  hence $\psi_s\wedge\psi_t\neq0$ near $\beta$.
+\item \textbf{$\eta:=N-\psi$ is the unit normal.} Using $\det\Omega=1$
+  and $\rho C=2$ one checks $\ip\eta\eta=1$ and $\ip\psi\eta=0$ by direct
+  matrix-determinant identities; finally
+  $\ip{\psi_z\wedge\psi_{\bar z}}\eta = \tfrac i2\{|B_z|^2-|U|^2\}$ (computed
+  via the symbolic routines of Appendix~B), and since $a+b=1$,
+  \eqref{eq:sigma-expanded} forces $\ip{\psi_s\wedge\psi_t}\eta>0$, i.e.\
+  $\eta$ has the correct orientation.
+\item \textbf{$\psi$ is BLW.} Substituting the computed $d\eta$ into
+  \eqref{eq:eta-expansion} gives a $2\times2$ linear system for $H,\Upsilon$
+  with nonzero determinant $D=|U|^2-|B_z|^2$, whose solution is
+  \[
+    H = 1-\frac{b}{2(a+b)}\frac{\rho^2|G_z|^2}{D}, \qquad
+    K = H^2-|\Upsilon|^2 = 1+\frac{a}{a+b}\frac{\rho^2|G_z|^2}{D},
+  \]
+  from which $2a(H-1)+b(K-1)=0$ holds identically.
+\item \textbf{$\psi$ realizes the data $(\beta,V)$.} An identity relating
+  the initial curve data,
+  \begin{equation}\label{eq:init-prop}
+    (v_0+v_3)^2 G'\big\{\beta_1+i\beta_2-\overline G(\beta_0+\beta_3)\big\}
+      = v_0'+v_3'+i\big[(V\wedge v')_0+(V\wedge v')_3\big],
+  \end{equation}
+  combined with the third line of \eqref{eq:Lmodcompleted}, gives
+  $B(s,0)=\beta_1+i\beta_2-\overline G(\beta_0+\beta_3)$, and then
+  ($\det\Omega=1$, $\rho C=2$) $A(s,0)=\beta_0+\beta_3$. Writing out
+  $\psi=F\Omega F^*$ entrywise along $\beta$ and using
+  $\ip\beta\beta=-1$ (so $\beta_0+\beta_3\neq0$) pins down the remaining
+  matrix entry, giving $\psi(s,0)=\beta(s)$ for all $s\in I$; since
+  $(\psi+\eta)(s,0)=v(s)=\beta(s)+V(s)$ by construction, this also gives
+  $\eta(s,0)=V(s)$.
+\end{enumerate}
+Together, (i)–(v) show $\psi$ solves the Björling problem with data
+$(\beta,V)$, completing the existence proof for $a+b=1$.
+
+\subsubsection{The case $a+b=-1$}\label{ssec:case-1}
+
+The argument mirrors Sections~\ref{ssec:uniq}--\ref{ssec:exist} verbatim,
+with $G$ now extended \emph{anti}-meromorphically (justified by
+Theorem~\ref{thm:G} for $a+b<0$). The representation
+\eqref{eq:psipluseta-rep} for $\psi+\eta$ is unchanged, but now
+$\ip{(\psi+\eta)_z}{(\psi+\eta)_{\bar z}}=\tfrac12\rho^2|\overline{G_z}|^2$,
+giving the modified Liouville equation with $\overline{G_z}$ in place of
+$G_z$, and Cauchy data \eqref{eq:Lmodcompleted2} (a sign flip in the
+imaginary part relative to \eqref{eq:Lmodcompleted}, coming from
+$\sgn(a+b)=-1$ in \eqref{eq:rhoz-init}). The recovery formula gives
+$\psi=F\Omega F^*$ with $\Omega$ as in \eqref{eq:FOmega2}. All five
+existence steps go through with the roles of $U,B_z$ swapped
+appropriately, giving
+\[
+  H = 1-\frac{b}{2(a+b)}\frac{\rho^2|\overline{G_z}|^2}{D}, \qquad
+  K = 1+\frac{a}{a+b}\frac{\rho^2|\overline{G_z}|^2}{D}, \qquad
+  D=|U|^2-|\overline{B_z}|^2\neq0,
+\]
+and $\psi(s,0)=\beta(s)$ follows exactly as before.
+
+\subsection{Further remarks}\label{ssec:remarks}
+
+\subsubsection{On the hypotheses on the initial data}
+
+Writing $Q=a\psi-b\eta$ and using $\sigma=\ip{d\psi}{dQ}=2\chi|dz|^2$
+in a $\sigma$-conformal chart, one gets $2\chi(s,0)=
+\ip{\beta'(s)}{a\beta'(s)-bV'(s)}>0$: this is exactly why condition
+\eqref{eq:cond2} is imposed in the statement of the problem — it is a
+\emph{necessary} condition for any solution to exist, not an artificial
+restriction.
+
+The hypothesis $v_0(s)+v_3(s)\neq0$ (needed for \eqref{eq:Gz} to make
+sense) can be dropped following \cite{GMM1}: composing $G$ with a
+suitable Möbius transformation of $\Cbar$ reduces to this case. Concretely,
+since $v(s)=\beta(s)+V(s)\neq0$, whenever $v_0+v_3=0$ one has
+$v_0-v_3\neq0$, and one instead writes
+$N=\psi+\eta=\rho_*\begin{psmallmatrix}H\overline H&\overline H\\H&1\end{psmallmatrix}$,
+$\rho_*=N_0-N_3$, $H=(N_1-iN_2)/(N_0-N_3)$, with the extra requirement
+$H'(s_0)\neq0$ at the exceptional point; the same computations then give
+the same conclusion of Theorem~\ref{thm:BJ} by locality of the problem.
+
+The nowhere-vanishing of $G'$ is more essential. If $G'\equiv0$
+identically, Remark~\ref{rmk:psipluseta} forces any solution to be (part
+of) a horosphere. If $G'\not\equiv0$ but has isolated zeros (forced to be
+isolated by analyticity), the construction of Theorem~\ref{thm:BJ} can
+develop singularities; analyzing these singularities is left as an open
+problem (Section~\ref{sec:conclusion}, Problems~\ref{open:G.equiv.0},
+\ref{open:singularity.1}).
+
+\subsubsection{Why $G$ is meromorphic: proof of Theorem~\ref{thm:G}}
+
+By Remark~\ref{rmk:psipluseta}(1), $G$ is always conformal, hence
+meromorphic or anti-meromorphic; the content of Theorem~\ref{thm:G} is
+pinning down \emph{which one}, by the sign of $a+b$. The uniqueness
+argument of Section~\ref{ssec:uniq} tacitly assumes $G$ meromorphic for
+$a+b=1$; this is justified by contradiction: assume $\psi$ is BLW,
+$a+b=1$, $\sigma$ positive-definite, $\psi(S)$ not a horosphere (so the
+umbilic points — equivalently the zeros of $G_{\bar z}$ — are isolated),
+and suppose \emph{towards contradiction} that $G$ is anti-meromorphic.
+Fix a conformal chart $(U,z)$ (preserving orientation) and write
+$\psi+\eta$ as in \eqref{eq:psipluseta-rep} with $\rho$ nonvanishing on
+$U$ (achievable after composing $G$ with a suitable Möbius map). The
+computation of Section~\ref{ssec:case-1} (the $a+b=-1$ formulas, which
+apply here because they only used anti-meromorphicity of $G$, not the
+sign of $a+b$) gives $\psi=F\Omega F^*$ with $\Omega$ as in
+\eqref{eq:FOmega2}, hence \eqref{eq:sigma-expanded} for $a+b=1$ forces
+$|\overline{B_z}|^2-|U|^2>0$; but then the analogue of the identity used in
+step (iii) of Section~\ref{ssec:exist} gives
+$\ip{\psi_s\wedge\psi_t}\eta<0$ — contradicting that $\eta$ and
+$\psi_s\wedge\psi_t$ point in the same direction (by construction of the
+unit normal, Section~\ref{ssec:local}). Hence $G$ must be meromorphic
+when $a+b=1$; the case $a+b=-1$ (anti-meromorphic) is symmetric.
+
+% =====================================================================
+\section{Conclusions and open problems}\label{sec:conclusion}
+% =====================================================================
+
+The thesis poses and solves the Björling problem for BLW surfaces.
+Theorem~\ref{thm:BJ} establishes existence and uniqueness of the solution;
+its representation formula does not use the conformal representation of
+\cite{GMM2}, and is thus a genuine \emph{Björling representation} for BLW
+surfaces. It specializes to the known results for $\mathtt{CMC1}$ surfaces
+\cite{GMM1} and regular flat surfaces \cite{GMM5}. Theorem~\ref{thm:G}
+determines the meromorphicity type of the hyperbolic Gauss map of a BLW
+surface from the sign of $a+b$. Along the way, the author establishes the
+Lorentzian cross-product identities \eqref{eq:wpbase}--\eqref{eq:wpb},
+which are used repeatedly and are noted as small original computational
+results.
+
+For lack of time, the thesis does not address one of the important
+consequences of solving the Björling problem: the \emph{symmetry
+principle} for BLW surfaces. This should follow by an argument entirely
+parallel to \cite{GMM1} once an appropriate notion of symmetry (for BLW
+surfaces reflected across geodesic planes orthogonal to them) is set up.
+
+\subsection*{Open problems}
+The following related problems (some already studied for $\mathtt{CMC1}$
+surfaces in \cite{GMM1}, as noted) are proposed:
+\begin{enumerate}[label=\arabic*.]
+\item Study BLW surfaces with the topology of a cylinder.
+\item Study complete BLW surfaces with special finite \emph{dual} total
+  curvature.
+\item Find an explicit closed formula for the solution when the initial
+  curve $\beta$ is planar.
+\item\label{open:G.equiv.0} Solve the Björling problem when $G$ in
+  \eqref{eq:Gextra} is a \emph{constant} map; as noted in
+  Section~\ref{ssec:remarks}, any solution in this case must be (part of)
+  a horosphere.
+\item Find a geometric solution of the Cauchy problem for the Liouville
+  equation \eqref{eq:Lcauchyreal} (with $c=1$) directly, in the spirit of
+  \cite{GMM1}'s geometric approach via the secondary Gauss map (related
+  to the rigidity property) of $\mathtt{CMC1}$ surfaces, recovering the
+  solution of \eqref{eq:Lcauchyreal} from that map and the initial data.
+\item\label{open:singularity.1} Solve the Björling problem allowing
+  singularities — e.g.\ where $G'$ or $\ip{\beta'}{a\beta'-bV'}$ vanish at
+  isolated points of $I$ — extending the notion of BLW surface to points
+  where \eqref{eq:BLWdef} only holds at regular points. This parallels
+  \cite{GMM5}'s treatment of flat fronts (which allow singularities,
+  unlike flat surfaces) and its subsequent classification of flat fronts
+  with embedded isolated singularities.
+\item Solve the Björling problem when the initial data satisfies
+  $\ip{\beta'}{a\beta'-bV'}\equiv0$ identically (note: by analyticity of
+  $\beta,V$, the zero set of this quantity is either isolated or all of
+  $I$). By Corollary~10 of \cite{GMM5} (case $a=0$), given $\beta$ and a
+  suitably chosen $V$, there is a unique flat front $\Sigma$ for which
+  $\beta$ consists exactly of the singular points of $\Sigma$.
+\item Solve the Björling problem for $\mathtt{ELW}$ (Elliptic Linear
+  Weingarten) surfaces \cite{GMM6} — surfaces in $\RR^3$ satisfying an
+  analogous relation between $H$ and $K$. This case may in fact be
+  \emph{harder} than the BLW case: for $\mathtt{ELW}$ surfaces only a
+  \emph{harmonic}, not conformal, representation is available
+  \cite{GMM6}, which is the chief obstacle.
+\item\label{open:G} By \cite{BRYANT,GMM1}, the hyperbolic Gauss map of a
+  regular surface $\psi:S\to\Hyp$ is meromorphic iff $\psi$ is
+  $\mathtt{CMC1}$; Theorem~\ref{thm:G} partially generalizes this. The
+  converse direction is open: if $\sigma=aI+bI\!I$ is positive-definite
+  and $G$ is meromorphic (or anti-meromorphic), must $\psi$ be BLW?
+\end{enumerate}
+Finally, there is also a Björling problem for \emph{maximal} surfaces in
+$\mathbb L^n$; preliminary computations (Assoc.\ Prof.\ Đoàn Thế Hiếu,
+based on \cite{ACM,AM}) suggest this can be solved by integrating
+functions with no real periods.
+
+% =====================================================================
+\appendix
+\section{Previously solved Björling-type problems}\label{app:list}
+% =====================================================================
+
+The following table (reproduced from the thesis's Appendix~A) lists
+Björling-type problems solved prior to this thesis. In every case the
+solution is unique and yields a symmetry principle for the surface class
+considered.
+
+\begin{center}
+\begin{tabular}{lll c}
+\textit{Surface class} & \textit{Reference} & \textit{Author(s)} & \textit{Year}\\
+\hline
+minimal, $\RR^3$ & \cite{FUNG} & E.\,G.\ Björling, H.\,A.\ Schwarz & 1844, 1890\\
+minimal, $\RR^n$ & \cite{AM} & L.\,J.\ Alías, P.\ Mira & 2002\\
+maximal, $\mathbb L^3$ & \cite{ACM} & L.\,J.\ Alías et al. & 2003\\
+minimal Möbius strip, $\RR^n$ & \cite{MIRA} & P.\ Mira & 2005\\
+flat front, $\Hyp$ & \cite{GMM5} & J.\,A.\ Gálvez, P.\ Mira & 2005\\
+flat surface, $\Hyp$ & \cite{GMM5} & J.\,A.\ Gálvez, P.\ Mira & 2005\\
+$\mathtt{CMC1}$, $\Hyp$ & \cite{GMM1} & J.\,A.\ Gálvez, P.\ Mira & 2005\\
+improper affine sphere, $\RR^3$ & \cite{ACG} & J.\,A.\ Aledo et al. & (preprint)\\
+\textbf{BLW}, $\Hyp$ & \textit{this thesis} & Huỳnh Kỳ Anh & 2006\\
+\end{tabular}
+\end{center}
+
+% =====================================================================
+\section{Note on the appendix on symbolic computation}
+% =====================================================================
+
+The thesis includes an appendix with Maple routines used to verify, by
+symbolic (Hermitian $2\times2$ matrix) computation, identities such as
+$\ip{\psi_z\wedge\psi_{\bar z}}\eta = \tfrac i2\{|B_z|^2-|U|^2\}$ (used in
+step (iii) of Section~\ref{ssec:exist}) for the
+case $a+b=1$, and the analogous identity with $U,\overline{B_z}$ swapped
+for $a+b=-1$ — that are otherwise long, purely mechanical determinant
+expansions. These routines are a computational aid, not a separate
+mathematical contribution, and are not reproduced here.
+
+% =====================================================================
+\begin{thebibliography}{99}\small
+
+\bibitem{GMM1} J.\,A.\ Gálvez, A.\ Martínez, P.\ Mira, \emph{The Björling
+  problem for constant mean curvature one surfaces in the hyperbolic
+  space}, related works of Gálvez--Mira on $\mathtt{CMC1}$ surfaces.
+
+\bibitem{GMM2} J.\,A.\ Gálvez, A.\ Martínez, P.\ Mira, \emph{On the
+  conformal (harmonic) representation of linear Weingarten surfaces of
+  Bryant type in $\Hyp$} (referenced as a preprint at the time of
+  writing).
+
+\bibitem{GMM5} J.\,A.\ Gálvez, P.\ Mira, \emph{Embedded isolated
+  singularities of flat surfaces in hyperbolic space} and the Björling
+  problem for flat fronts/flat surfaces, 2005.
+
+\bibitem{GMM6} J.\,A.\ Gálvez, A.\ Martínez, P.\ Mira, on Elliptic Linear
+  Weingarten ($\mathtt{ELW}$) surfaces in $\RR^3$.
+
+\bibitem{BRYANT} R.\ Bryant, \emph{Surfaces of mean curvature one in
+  hyperbolic space}, Astérisque \textbf{154--155} (1987).
+
+\bibitem{MAGIC} Reference on the degenerate BLW case $a+b=0$ (cited via
+  \cite{GMM2}; not available to the author of the thesis).
+
+\bibitem{FKR} Local theory of surfaces reference (Fujimori--Kobayashi--Rossman
+  or similar).
+
+\bibitem{FUJIMORI} S.\ Fujimori, concise treatment of the basic equations
+  of surface theory.
+
+\bibitem{CARMO} M.\ P.\ do Carmo, treatment of the hyperbolic space model
+  with detailed proofs.
+
+\bibitem{FUNG} K.\ Fung, treatment of minimal surfaces in $\RR^3$ as
+  isotropic curves in $\CC^3$, with a fast solution of the classical
+  Björling problem.
+
+\bibitem{AM} L.\,J.\ Alías, P.\ Mira, Björling problem for minimal
+  surfaces in $\RR^n$, 2002.
+
+\bibitem{ACM} L.\,J.\ Alías et al., Björling problem for maximal surfaces
+  in $\mathbb L^3$, 2003.
+
+\bibitem{MIRA} P.\ Mira, Björling problem for minimal Möbius strips in
+  $\RR^n$, 2005.
+
+\bibitem{ACG} J.\,A.\ Aledo et al., Björling problem for improper affine
+  spheres in $\RR^3$ (preprint).
+
+\bibitem{LIOUVILLE} Reference(s) on the Liouville equation and its Cauchy
+  problem.
+
+\bibitem{HITCHIN} N.\ Hitchin, lecture notes on Riemann surfaces.
+
+\bibitem{WIKI:RS} Wikipedia, \emph{Riemann surface}.
+
+\bibitem{WIKI:AC} Wikipedia, \emph{Analytic continuation}.
+
+\bibitem{AHLFORS} L.\ Ahlfors, \emph{Complex Analysis}.
+
+\end{thebibliography}
+
+\end{document}
