@@ -7,16 +7,32 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    name: "verify: ${{ matrix.script }} ${{ matrix.args }} [${{ matrix.mode }}]"
     strategy:
       fail-fast: false
       matrix:
-        script:
-          - test_wedge_identities.py
-          - verify_HK.py
-          - verify_U.py
-          - verify_case1.py
-          - verify_case2.py
-          - verify_init_prop.py
+        include:
+          - script: test_wedge_identities.py
+            args: ""
+            mode: symbolic
+          - script: verify_HK.py
+            args: ""
+            mode: symbolic
+          - script: verify_U.py
+            args: ""
+            mode: symbolic
+          - script: verify_case1.py
+            args: ""
+            mode: numeric
+          - script: verify_case1.py
+            args: "--symbolic"
+            mode: symbolic
+          - script: verify_case2.py
+            args: ""
+            mode: numeric
+          - script: verify_init_prop.py
+            args: ""
+            mode: numeric
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +42,6 @@ jobs:
 
       - run: pip install sympy
 
-      - name: Run ${{ matrix.script }}
+      - name: Run ${{ matrix.script }} ${{ matrix.args }}
         working-directory: verify
-        run: python ${{ matrix.script }}
+        run: python ${{ matrix.script }} ${{ matrix.args }}
