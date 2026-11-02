@@ -60,4 +60,6 @@ def one_trial(rng):
 if __name__ == "__main__":
     rng = random.Random(1)
     for t in range(5):
-        print(f"trial {t}: diff = {one_trial(rng)}")
+        diff = one_trial(rng)
+        print(f"trial {t}: diff = {diff}")
+        assert diff == 0

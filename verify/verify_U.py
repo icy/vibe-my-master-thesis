@@ -59,5 +59,7 @@ print("U (raw, before PDE substitution):")
 sp.pprint(sp.simplify(U))
 print("\nU after substituting the Liouville PDE:")
 sp.pprint(U_after_pde)
+U_diff = sp.simplify(U_after_pde - target)
 print("\ndifference from target b/(2(a+b)) * rho * G_z  (want 0):")
-print(sp.simplify(U_after_pde - target))
+print(U_diff)
+assert U_diff == 0

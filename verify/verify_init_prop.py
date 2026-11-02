@@ -82,6 +82,7 @@ def check(beta, V, free_values, label):
     RHS = vp[0]+vp[3] + I*(W[0]+W[3])
 
     print(f"{label}: LHS-RHS = {sp.simplify(LHS-RHS)}   (beta'={bp}, V'={Vp})")
+    assert sp.simplify(LHS-RHS) == 0
 
 
 check((1,0,0,0), (0,1,0,0), [2,3,5,7], "test 1")

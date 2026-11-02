@@ -88,6 +88,8 @@ def run_numeric(trials=5, seed=0):
         d1 = sp.nsimplify(sp.simplify(result - t1))
         d2 = sp.nsimplify(sp.simplify(result - t2))
         print(f"trial {t}: diff-vs-closed-form-#1 = {d1}   diff-vs-(i/2)(|B_z|^2-|U|^2) = {d2}")
+        assert d1 == 0
+        assert d2 == 0
 
 
 def run_symbolic():
@@ -106,6 +108,7 @@ def run_symbolic():
     print("cross-multiplied numerator difference (want 0):")
     print(cross)
     print("is exactly zero:", cross == 0)
+    assert cross == 0
 
 
 if __name__ == "__main__":

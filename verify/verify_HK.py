@@ -34,8 +34,14 @@ D = sp.cancel((-B_z*B_zb + U*Ub).subs(subs_U))    # D = |U|^2-|B_z|^2 after subs
 H_target = 1 - b/(2*(a+b)) * rho**2*G_z*G_zb / D
 K_target = 1 + a/(a+b) * rho**2*G_z*G_zb / D
 
-print("H_sol - H_target  (want 0):", sp.simplify(sp.cancel(H_sol_c - H_target)))
-print("K_sol - K_target  (want 0):", sp.simplify(sp.cancel(K_sol_c - K_target)))
+H_diff = sp.simplify(sp.cancel(H_sol_c - H_target))
+K_diff = sp.simplify(sp.cancel(K_sol_c - K_target))
+print("H_sol - H_target  (want 0):", H_diff)
+print("K_sol - K_target  (want 0):", K_diff)
+assert H_diff == 0
+assert K_diff == 0
 
 blw = sp.cancel(2*a*(H_sol_c - 1) + b*(K_sol_c - 1))
-print("2a(H-1)+b(K-1), fully substituted (want 0):", sp.simplify(blw))
+blw_diff = sp.simplify(blw)
+print("2a(H-1)+b(K-1), fully substituted (want 0):", blw_diff)
+assert blw_diff == 0

@@ -1,0 +1,31 @@
+name: Verify thesis proofs
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        script:
+          - test_wedge_identities.py
+          - verify_HK.py
+          - verify_U.py
+          - verify_case1.py
+          - verify_case2.py
+          - verify_init_prop.py
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install sympy
+
+      - name: Run ${{ matrix.script }}
+        working-directory: verify
+        run: python ${{ matrix.script }}
