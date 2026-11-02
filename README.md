@@ -16,6 +16,6 @@ It's in 2006. Basically 20 years ago.
   - `verify_case1.py` — the `a+b=1` wedge/normal identity, vs. the thesis's own Maple computation.
   - `verify_case2.py` — the mirror `a+b=-1` case.
   - `verify_init_prop.py` — the initial-data identity `eq:init-prop`.
-- `origin/` — original 2006 source material, kept locally only (not tracked in git).
+- `origin/` — original 2006 source material (Vietnamese), committed to the repo.
   - `origin/mymaster-final.pdf` — the original master thesis PDF (43 pages).
   - `origin/article.pdf` — related article (6 pages).
